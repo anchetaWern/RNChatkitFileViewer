@@ -5,7 +5,7 @@ import Chatkit from '@pusher/chatkit';
 import axios from 'axios';
 import Config from 'react-native-config';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+import { DocumentPicker } from 'react-native-document-picker';
 import * as mime from 'react-native-mime-types';
 import Modal from 'react-native-modal';
 
@@ -299,9 +299,6 @@ class Chat extends Component {
     await this.setState({
       is_picking_file: true
     });
-
-    console.log('mp3: ', mime.lookup('mp3'));
-    console.log('mp4: ', mime.lookup('mp4'));
 
     DocumentPicker.show({
       filetype: [mime.lookup('mp3'), mime.lookup('mp4')],
