@@ -20,8 +20,6 @@ class VideoPlayer extends Component {
     paused: true,
   };
 
-  video: Video;
-
   onLoad = (data) => {
     this.setState({ duration: data.duration });
   }
