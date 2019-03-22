@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { View, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { GiftedChat, Send, Message } from 'react-native-gifted-chat';
-import Chatkit from '@pusher/chatkit';
+import { ChatManager, TokenProvider } from '@pusher/chatkit-client';
 import axios from 'axios';
 import Config from 'react-native-config';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { DocumentPicker } from 'react-native-document-picker';
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 import * as mime from 'react-native-mime-types';
 import Modal from 'react-native-modal';
 
@@ -54,17 +54,14 @@ class Chat extends Component {
 
 
   async componentDidMount() {
-    const tokenProvider = new Chatkit.TokenProvider({
-      url: CHATKIT_TOKEN_PROVIDER_ENDPOINT
-    });
-
-    const chatManager = new Chatkit.ChatManager({
-      instanceLocator: CHATKIT_INSTANCE_LOCATOR_ID,
-      userId: this.user_id,
-      tokenProvider: tokenProvider
-    });
 
     try {
+      const chatManager = new ChatManager({
+        instanceLocator: CHATKIT_INSTANCE_LOCATOR_ID,
+        userId: this.user_id,
+        tokenProvider: new TokenProvider({ url: CHATKIT_TOKEN_PROVIDER_ENDPOINT })
+      });
+
       let currentUser = await chatManager.connect();
       this.currentUser = currentUser;
 
@@ -78,11 +75,11 @@ class Chat extends Component {
 
       const room = response.data;
 
-      this.room_id = parseInt(room.id);
+      this.room_id = room.id.toString();
       await this.currentUser.subscribeToRoom({
         roomId: this.room_id,
         hooks: {
-          onNewMessage: this.onReceive
+          onMessage: this.onReceive
         }
       });
 
@@ -97,6 +94,7 @@ class Chat extends Component {
 
 
   onReceive = async (data) => {
+    console.log('received message');
     const { message } = await this.getMessage(data);
 
     await this.setState((previousState) => ({
