@@ -2,6 +2,8 @@
 
 A React Native chat app created with Chatkit with feature for playing audio (mp3) and video (mp4) files.
 
+You can read the full tutorial here: [https://pusher.com/tutorials/audio-video-files-react-native](https://pusher.com/tutorials/audio-video-files-react-native)
+
 ### Prerequisites
 
 -   React Native development environment
